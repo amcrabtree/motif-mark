@@ -3,18 +3,18 @@ Visualize sequence motifs on DNA sequences
 
 ### **Dependencies**
 
-* Python3
+* Python3 (including the packages: argparse, seaborn, re, cairo)
 
 ### **CLI Usage**
-```
-python3 motif-mark-oop.py -f GENE_FILE.fasta -m MOTIF_FILE.txt
-```
+
+    $ python3 motif-mark-oop.py -f GENE_FILE.fasta -m MOTIF_FILE.txt
+
 
 **Test**
-```
-chmod a+x motif-mark-oop.py
-./motif-mark-oop.py -f Figure_1.fasta -m Fig_1_motifs.txt
-```
+
+  $ chmod a+x motif-mark-oop.py
+  $ ./motif-mark-oop.py -f Figure_1.fasta -m Fig_1_motifs.txt
+
 
 **Options**
 
@@ -38,4 +38,8 @@ flag         | description
 |-----------------------|---------------------------------------------------------------------------------------------------------------------------|
 |    GENE_FILE.png      |   This is a PNG file with the same name as input FASTA, containing a syntenic image of each gene with exons and motifs.   |
 
+## Installing pycairo (with homebrew and pip), if needed
 
+    $ brew install pkg-config
+    $ brew install cairo
+    $ pip3 install pycairo
