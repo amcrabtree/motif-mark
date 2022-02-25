@@ -12,8 +12,8 @@ Visualize sequence motifs on DNA sequences
 
 **Test**
 
-  $ chmod a+x motif-mark-oop.py
-  $ ./motif-mark-oop.py -f Figure_1.fasta -m Fig_1_motifs.txt
+    $ chmod a+x motif-mark-oop.py
+    $ ./motif-mark-oop.py -f Figure_1.fasta -m Fig_1_motifs.txt
 
 
 **Options**
