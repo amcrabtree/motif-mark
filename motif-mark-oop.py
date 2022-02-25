@@ -173,7 +173,7 @@ class Gene:
         '''Store dictionary with all motifs found within gene.'''
         mdict = {}
         for motif in motif_set:
-            pattern = degen_pattern(motif)
+            pattern = "(?=(" + degen_pattern(motif) + "))"
             match_list = [x for x in re.finditer(pattern, self.seq.upper())]
             positions_list = [p.start()+1 for p in match_list]
             mdict[motif] = positions_list # key=motif_seq, value=nt_positions
