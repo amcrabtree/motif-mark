@@ -32,13 +32,13 @@ flag         | description
 
 2. **Motif file** – File contains motif sequences; file does not have a header, each motif is on a new line, case doesn't matter and sequences can be RNA or DNA; accepts any file extension
 
-## **Program Output**
+### **Program Output**
 
 |    Filename           |   Description                                                                                                             |
 |-----------------------|---------------------------------------------------------------------------------------------------------------------------|
 |    GENE_FILE.png      |   This is a PNG file with the same name as input FASTA, containing a syntenic image of each gene with exons and motifs.   |
 
-## Installing pycairo (with homebrew and pip), if needed
+### Installing pycairo (with homebrew and pip), if needed
 
     $ brew install pkg-config
     $ brew install cairo
