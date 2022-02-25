@@ -81,23 +81,19 @@ def degen_pattern(seq: str) -> str:
             pattern = pattern.replace(degen_nt, degen_pattern)
     return pattern
 
-#frag='atgaagATAGATgtatgactcacctgtgc'
-#degen_pattern('GATSSBu')
-#print([x.start() for x in re.finditer(degen_pattern('GATst'), frag.upper())])
-
-def draw_gene(context, gene_obj, dist_from_top=60):
-    context.select_font_face("Ariel", cairo.FONT_SLANT_NORMAL, 
-        cairo.FONT_WEIGHT_BOLD)
-    context.set_font_size(20)
+def draw_gene(context, gene_obj, dist_from_top=60, dist_from_left=50):
+    context.select_font_face("Ariel", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    context.set_font_size(30)
     context.move_to(20, dist_from_top-10)
     context.set_source_rgba(0,0,0, 0.8)
-    context.show_text(gene_obj.description)
+    gene_title = re.sub(r'chr\S+', "", gene_obj.description) #remove chr position from title
+    context.show_text(gene_title)
 
     # draw horizontal line (lay genome track)
-    x_final = len(gene_obj.seq)
+    x_final = len(gene_obj.seq)+dist_from_left
     if x_final > 1000:
         print("CAUTION: You have a sequence > 1000 bp, so it will run off the page.")
-    x, neg_y, neg_y_final = [50, dist_from_top+40, dist_from_top+40]
+    x, neg_y, neg_y_final = [dist_from_left, dist_from_top+40, dist_from_top+40]
     context.set_line_width(5)
     context.set_line_cap(cairo.LINE_CAP_ROUND)
     context.move_to(x, neg_y)
@@ -107,30 +103,52 @@ def draw_gene(context, gene_obj, dist_from_top=60):
 
     # draw rectangle (gene element)
     ex_pos, ex_len = [x for x in gene_obj.exons.values()][0]
-    x, neg_y, wid, hig = ex_pos+10, dist_from_top, ex_len, 80
+    x, neg_y, wid, hig = [ex_pos+dist_from_left, dist_from_top, ex_len, 80]
     context.set_line_width(0.02)
     context.rectangle(x, neg_y, wid, hig)
     context.set_source_rgba(0,0,0, 0.8)
     context.fill()
     context.stroke()
 
-def draw_motifs(context, motif_dict, dist_from_top=60):
+def draw_motifs(context, motif_dict, dist_from_top=60, dist_from_left=50):
     # create list of colors contingent with number of motifs present
     palette = [list(x) for x in seaborn.color_palette("husl", len(motif_dict))]
     p=0 # initialize palette counter
     # draw rectangle of unique color for each motif type
     for motif in motif_dict:
-        my_color = palette[p] # set motif color
+        r,g,b = palette[p] # set motif color
         for motif_pos in motif_dict[motif]:
             motif_len = len(motif)
-            x, neg_y, wid, hig = motif_pos+10, dist_from_top, motif_len, 80
+            x, neg_y, wid, hig = [motif_pos+dist_from_left, dist_from_top, motif_len, 80]
             context.set_line_width(0.02)
             context.rectangle(x, neg_y, wid, hig)
-            context.set_source_rgba(my_color[0], my_color[1], my_color[2], 0.8)
+            context.set_source_rgba(r, g, b, 0.8)
             context.fill()
             context.stroke()
         p+=1
 
+def draw_legend(context, motif_dict, dist_from_top=60, dist_from_left=1070):
+    # create list of colors corresponding to motifs
+    palette = [list(x) for x in seaborn.color_palette("husl", len(motif_dict))]
+    p=0 # initialize palette counter
+    for motif in motif_dict:
+        # draw square of unique color for each motif type
+        r,g,b = palette[p] # motif color
+        context.set_source_rgba(r, g, b, 0.8)
+        p+=1
+        x, neg_y, wid, hig = [dist_from_left, dist_from_top-10, 40, 40]
+        context.set_line_width(0.02)
+        context.rectangle(x, neg_y, wid, hig)
+        context.fill()
+        context.stroke()
+        # draw text
+        context.select_font_face("Courier", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        context.set_font_size(30)
+        context.move_to(dist_from_left+50, dist_from_top+20)
+        context.set_source_rgba(0,0,0, 0.8)
+        context.show_text(motif)
+        dist_from_top+=50
+        
 ######################### CLASSES #########################
 
 class Motif:
@@ -178,7 +196,7 @@ for key, val in my_gene_dict.items():
     gene_objects.append(Gene(key, val))
 
 ## write cairo img file    
-with cairo.ImageSurface(cairo.FORMAT_ARGB32, 1000, 1000) as surface:
+with cairo.ImageSurface(cairo.FORMAT_ARGB32, 1400, 1600) as surface:
     context = cairo.Context(surface)
     d = 60 # distance from top of page to start drawing genes
     for g in gene_objects:
@@ -186,6 +204,7 @@ with cairo.ImageSurface(cairo.FORMAT_ARGB32, 1000, 1000) as surface:
         my_motif_dict = g.motif_dict(my_motif_set)
         draw_motifs(context, my_motif_dict, d)
         d+=140 # move next gene down the page
+        draw_legend(context, my_motif_dict)
     # save as png
     png_name = args.fasta.split('.')[0]+'.png'
     print('wrote',png_name,'to file.')
