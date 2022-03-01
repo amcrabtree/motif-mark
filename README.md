@@ -38,7 +38,6 @@ flag         | description
 |-----------------------|---------------------------------------------------------------------------------------------------------------------------|
 |    GENE_FILE.png      |   This is a PNG file with the same name as input FASTA, containing a syntenic image of each gene with exons and motifs.   |
 
-![](motif_example.png)
 <img src="https://github.com/amcrabtree/motif-mark/blob/main/motif_example.png" alt="drawing" width="600"/>
 
 ### Installing pycairo (with homebrew and pip), if needed
