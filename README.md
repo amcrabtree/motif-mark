@@ -38,6 +38,9 @@ flag         | description
 |-----------------------|---------------------------------------------------------------------------------------------------------------------------|
 |    GENE_FILE.png      |   This is a PNG file with the same name as input FASTA, containing a syntenic image of each gene with exons and motifs.   |
 
+![](motif_example.png)
+
+
 ### Installing pycairo (with homebrew and pip), if needed
 
     $ brew install pkg-config
